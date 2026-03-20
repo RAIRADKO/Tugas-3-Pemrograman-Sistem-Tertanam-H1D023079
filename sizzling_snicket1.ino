@@ -1,84 +1,55 @@
-const int utaraMerah = 13;
-const int utaraKuning = 12;
-const int utaraHijau = 11;
-const int baratMerah = 10;
-const int baratKuning = 9;
-const int baratHijau = 8;
-const int selatanMerah = 7;
-const int selatanKuning = 6;
-const int selatanHijau = 5;
-const int timurMerah = 4;
-const int timurKuning = 3;
-const int timurHijau = 2;
-
-const int waktuHijau = 5000;
-const int waktuKuning = 2000;
-const int waktuJeda = 3000;
+int merahU = 2, kuningU = 3, hijauU = 4;
+int merahT = 5, kuningT = 6, hijauT = 7;
+int merahS = 8, kuningS = 9, hijauS = 10;
+int merahB = 11, kuningB = 12, hijauB = 13;
 
 void setup() {
-  for (int i = 2; i <= 13; i++) {
-    pinMode(i, OUTPUT);
-  }
+  pinMode(merahU, OUTPUT); pinMode(kuningU, OUTPUT); pinMode(hijauU, OUTPUT);
+  pinMode(merahT, OUTPUT); pinMode(kuningT, OUTPUT); pinMode(hijauT, OUTPUT);
+  pinMode(merahS, OUTPUT); pinMode(kuningS, OUTPUT); pinMode(hijauS, OUTPUT);
+  pinMode(merahB, OUTPUT); pinMode(kuningB, OUTPUT); pinMode(hijauB, OUTPUT);
+
   semuaMerah();
+  delay(2000);
 }
 
 void loop() {
-  // 1. UTARA
-  digitalWrite(utaraMerah, LOW);
-  digitalWrite(utaraHijau, HIGH);
-  delay(waktuHijau);
-  digitalWrite(utaraHijau, LOW);
-  digitalWrite(utaraKuning, HIGH);
-  delay(waktuKuning);
-  digitalWrite(utaraKuning, LOW);
-  digitalWrite(utaraMerah, HIGH);
-  delay(waktuJeda);
+  aktifkanSimpang(hijauU, kuningU, merahU);
+  aktifkanSimpang(hijauT, kuningT, merahT);
+  aktifkanSimpang(hijauS, kuningS, merahS);
+  aktifkanSimpang(hijauB, kuningB, merahB);
+}
 
-  // 2. TIMUR  ← dipindah ke posisi kedua
-  digitalWrite(timurMerah, LOW);
-  digitalWrite(timurHijau, HIGH);
-  delay(waktuHijau);
-  digitalWrite(timurHijau, LOW);
-  digitalWrite(timurKuning, HIGH);
-  delay(waktuKuning);
-  digitalWrite(timurKuning, LOW);
-  digitalWrite(timurMerah, HIGH);
-  delay(waktuJeda);
+void aktifkanSimpang(int pinHijau, int pinKuning, int pinMerah) {
+  semuaMerah();
 
-  // 3. SELATAN
-  digitalWrite(selatanMerah, LOW);
-  digitalWrite(selatanHijau, HIGH);
-  delay(waktuHijau);
-  digitalWrite(selatanHijau, LOW);
-  digitalWrite(selatanKuning, HIGH);
-  delay(waktuKuning);
-  digitalWrite(selatanKuning, LOW);
-  digitalWrite(selatanMerah, HIGH);
-  delay(waktuJeda);
+  digitalWrite(pinMerah, LOW);
+  digitalWrite(pinHijau, HIGH);
+  delay(5000);
 
-  // 4. BARAT  ← dipindah ke posisi keempat
-  digitalWrite(baratMerah, LOW);
-  digitalWrite(baratHijau, HIGH);
-  delay(waktuHijau);
-  digitalWrite(baratHijau, LOW);
-  digitalWrite(baratKuning, HIGH);
-  delay(waktuKuning);
-  digitalWrite(baratKuning, LOW);
-  digitalWrite(baratMerah, HIGH);
-  delay(waktuJeda);
+  digitalWrite(pinHijau, LOW);
+  kedipKuning(pinKuning, 3);
+
+  digitalWrite(pinKuning, HIGH);
+  delay(2000);
+
+  digitalWrite(pinKuning, LOW);
+  digitalWrite(pinMerah, HIGH);
+  delay(500);
+}
+
+void kedipKuning(int pinKuning, int nKali) {
+  for (int i = 0; i < nKali; i++) {
+    digitalWrite(pinKuning, HIGH);
+    delay(300);
+    digitalWrite(pinKuning, LOW);
+    delay(300);
+  }
 }
 
 void semuaMerah() {
-  digitalWrite(utaraMerah, HIGH);
-  digitalWrite(baratMerah, HIGH);
-  digitalWrite(selatanMerah, HIGH);
-  digitalWrite(timurMerah, HIGH);
-  digitalWrite(utaraKuning, LOW);
-  digitalWrite(baratKuning, LOW);
-  digitalWrite(selatanKuning, LOW);
-  digitalWrite(timurKuning, LOW);
-  digitalWrite(utaraHijau, LOW);
-  digitalWrite(baratHijau, LOW);
-  digitalWrite(selatanHijau, LOW);
-  digitalWrite(timurHijau, LOW);
+  digitalWrite(hijauU, LOW);  digitalWrite(kuningU, LOW);  digitalWrite(merahU, HIGH);
+  digitalWrite(hijauT, LOW);  digitalWrite(kuningT, LOW);  digitalWrite(merahT, HIGH);
+  digitalWrite(hijauS, LOW);  digitalWrite(kuningS, LOW);  digitalWrite(merahS, HIGH);
+  digitalWrite(hijauB, LOW);  digitalWrite(kuningB, LOW);  digitalWrite(merahB, HIGH);
 }
