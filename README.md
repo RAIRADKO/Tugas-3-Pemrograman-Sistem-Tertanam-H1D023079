@@ -1,63 +1,68 @@
-# 🚦 Sistem Lampu Lalu Lintas 4 Arah — Arduino
+#  Simulasi Lampu Lalu Lintas 4 Simpang — Arduino
 
-Simulasi lampu lalu lintas 4 arah (Utara, Timur, Selatan, Barat) menggunakan Arduino. Setiap arah berjalan secara sekuensial dengan siklus Hijau → Kuning → Merah, dilengkapi jeda antar pergantian arah.
+Proyek ini mensimulasikan sistem lampu lalu lintas pada persimpangan jalan dengan **4 arah** (Utara, Timur, Selatan, Barat) menggunakan Arduino. Setiap simpang memiliki lampu merah, kuning, dan hijau yang dikendalikan secara bergiliran.
 
 ---
 
-## 📋 Deskripsi
+##  Konfigurasi Pin
 
-Program ini mengontrol 12 LED yang mewakili lampu lalu lintas pada 4 persimpangan jalan. Setiap arah mendapat giliran menyala secara berurutan, sementara arah lainnya tetap merah.
+| Arah    | Merah | Kuning | Hijau |
+|---------|-------|--------|-------|
+| Utara   | 2     | 3      | 4     |
+| Timur   | 5     | 6      | 7     |
+| Selatan | 8     | 9      | 10    |
+| Barat   | 11    | 12     | 13    |
 
-**Urutan aktif:**
+---
+
+##  Cara Kerja
+
+Program menggunakan logika **round-robin** — setiap simpang mendapat giliran aktif secara bergantian, sementara tiga simpang lainnya tetap merah.
+
+### Alur satu siklus per simpang:
+
+1. **Semua merah** — semua lampu diset merah sebagai kondisi aman awal
+2. **Hijau aktif** — lampu hijau menyala selama **5 detik**
+3. **Kuning berkedip** — lampu kuning berkedip **3 kali** (interval 300ms) sebagai peringatan
+4. **Kuning solid** — lampu kuning menyala penuh selama **2 detik**
+5. **Kembali merah** — simpang kembali ke merah, giliran berpindah ke simpang berikutnya
+
+### Urutan giliran:
 ```
 Utara → Timur → Selatan → Barat → (ulangi)
 ```
 
 ---
 
-## 🔌 Konfigurasi Pin
+##  Fungsi-Fungsi Utama
 
-| Arah    | Merah | Kuning | Hijau |
-|---------|-------|--------|-------|
-| Utara   | 13    | 12     | 11    |
-| Barat   | 10    | 9      | 8     |
-| Selatan | 7     | 6      | 5     |
-| Timur   | 4     | 3      | 2     |
-
----
-
-## ⏱️ Pengaturan Waktu
-
-| Fase          | Durasi  |
-|---------------|---------|
-| Lampu Hijau   | 5 detik |
-| Lampu Kuning  | 2 detik |
-| Jeda Merah    | 3 detik |
-
-Total satu siklus penuh (4 arah): **± 40 detik**
+| Fungsi | Deskripsi |
+|--------|-----------|
+| `setup()` | Inisialisasi semua pin sebagai OUTPUT, nyalakan semua merah selama 2 detik |
+| `loop()` | Memanggil `aktifkanSimpang()` untuk setiap arah secara berurutan |
+| `aktifkanSimpang(hijau, kuning, merah)` | Menjalankan satu siklus penuh untuk satu simpang |
+| `kedipKuning(pin, nKali)` | Mengedipkan lampu kuning sebanyak `nKali` |
+| `semuaMerah()` | Mematikan semua lampu hijau/kuning dan menyalakan semua merah |
 
 ---
 
-## 🛠️ Komponen yang Dibutuhkan
+##  Timing Ringkas
 
-- 1x Arduino Uno (atau kompatibel)
-- 12x LED (3 merah, 3 kuning, 3 hijau × 4 arah... atau 4 set LED RGB)
-- 12x Resistor 220Ω
+| Fase          | Durasi       |
+|---------------|--------------|
+| Inisialisasi  | 2000 ms      |
+| Hijau         | 5000 ms      |
+| Kuning kedip  | 3 × 600 ms = 1800 ms |
+| Kuning solid  | 2000 ms      |
+| Jeda merah    | 500 ms       |
+
+Total satu siklus penuh (4 simpang) ≈ **±38 detik**
+
+---
+
+##  Kebutuhan Hardware
+
+- 1× Arduino Uno (atau kompatibel)
+- 12× LED (3 warna × 4 simpang: merah, kuning, hijau)
+- 12× Resistor 220Ω
 - Breadboard & kabel jumper
-
----
-
-## 📐 Skema Rangkaian
-
-Setiap LED dihubungkan ke pin digital Arduino melalui resistor 220Ω ke GND.
-
-```
-Arduino Pin → [Resistor 220Ω] → [LED Anoda] → [LED Katoda] → GND
-```
-
-Contoh untuk arah Utara:
-```
-Pin 13 → R → LED Merah  → GND
-Pin 12 → R → LED Kuning → GND
-Pin 11 → R → LED Hijau  → GND
-```
